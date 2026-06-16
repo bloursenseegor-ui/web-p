@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-1">Панель администратора</h2>{# [ЗАМЕНИТЬ] заголовок #}
+<p class="text-muted mb-4">Всего заявок: <strong>{{ applications|length }}</strong></p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover bg-white shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                {# [ЗАМЕНИТЬ] названия столбцов под тему #}
+                <th>Пользователь</th>
+                <th>Курс</th>
+                <th>Дата начала</th>
+                <th>Оплата</th>
+                <th>Статус</th>
+                <th>Изменить статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ app.user.username }}</td>
+                    {# [ЗАМЕНИТЬ] поля под тему: app.course_name → app.своё_поле #}
+                    <td>{{ app.course_name }}</td>
+                    <td>{{ app.start_date|date:"d.m.Y" }}</td>
+                    <td>{{ app.get_payment_display }}</td>
+
+                    <td>
+                        {% if app.status == 'new' %}
+                            <span class="badge bg-secondary">{{ app.get_status_display }}</span>
+                        {% elif app.status == 'learning' %}
+                            <span class="badge bg-primary">{{ app.get_status_display }}</span>
+                        {% else %}{# [ЗАМЕНИТЬ] ветки статусов если поменял STATUS_CHOICES #}
+                            <span class="badge bg-success">{{ app.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <form method="post" action="{% url 'change_status' app.pk %}" class="d-flex gap-1">
+                            {% csrf_token %}
+                            {# [ЗАМЕНИТЬ] варианты статусов — value должен совпадать с STATUS_CHOICES в models.py #}
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="new" {% if app.status == 'new' %}selected{% endif %}>Новая</option>
+                                <option value="learning" {% if app.status == 'learning' %}selected{% endif %}>Идет обучение</option>
+                                <option value="done" {% if app.status == 'done' %}selected{% endif %}>Обучение завершено</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">✓</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">Заявок пока нет</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

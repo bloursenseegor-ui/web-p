@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Мои заявки</h2>{# [ЗАМЕНИТЬ] заголовок страницы #}
+    <a href="{% url 'apply' %}" class="btn btn-success">+ Подать заявку</a>{# [ЗАМЕНИТЬ] текст кнопки #}
+</div>
+
+<div id="mainSlider" class="carousel slide mb-4 rounded shadow"
+     data-bs-ride="carousel" data-bs-interval="3000">
+
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="3"></button>
+    </div>
+
+    <div class="carousel-inner rounded">
+        {# [ЗАМЕНИТЬ] картинки: положи slide1.jpg slide2.jpg slide3.jpg slide4.jpg в main/static/images/ #}
+        <div class="carousel-item active">
+            <img src="{% static 'images/slide1.jpg' %}" class="d-block w-100 slider-img" alt="Слайд 1">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/slide2.jpg' %}" class="d-block w-100 slider-img" alt="Слайд 2">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/slide3.jpg' %}" class="d-block w-100 slider-img" alt="Слайд 3">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/slide4.jpg' %}" class="d-block w-100 slider-img" alt="Слайд 4">
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+{% if applications %}
+    {% for app in applications %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1">{{ app.course_name }}</h5>{# [ЗАМЕНИТЬ] app.course_name → app.своё_поле #}
+
+                    {% if app.status == 'new' %}
+                        <span class="badge bg-secondary">{{ app.get_status_display }}</span>
+                    {% elif app.status == 'learning' %}
+                        <span class="badge bg-primary">{{ app.get_status_display }}</span>
+                    {% else %}{# [ЗАМЕНИТЬ] статусы если поменял STATUS_CHOICES в models.py #}
+                        <span class="badge bg-success">{{ app.get_status_display }}</span>
+                    {% endif %}
+                </div>
+
+                <p class="text-muted small mb-2">
+                    📅 {{ app.start_date }} &nbsp;|&nbsp;
+                    💳 {{ app.get_payment_display }}
+                    {# [ЗАМЕНИТЬ] поля карточки: app.поле или app.get_поле_display для choices #}
+                </p>
+
+                {% if app.status == 'done' %}{# [ЗАМЕНИТЬ] 'done' → свой статус завершения #}
+                    {% if app.review %}
+                        <div class="alert alert-success mb-0 mt-2">
+                            <strong>Ваш отзыв:</strong> {{ app.review.text }}
+                        </div>
+                    {% else %}
+                        <form method="post" class="mt-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="app_id" value="{{ app.id }}">
+                            <textarea name="review_text" class="form-control mb-2"
+                                      rows="2" placeholder="Ваш отзыв об обучении..."
+                                      required></textarea>
+                            <button type="submit" class="btn btn-sm btn-outline-success">
+                                Оставить отзыв
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="text-center py-5">
+        <p class="text-muted fs-5">У вас пока нет заявок</p>
+        <a href="{% url 'apply' %}" class="btn btn-primary">Подать первую заявку</a>
+    </div>
+{% endif %}
+
+{% endblock %}

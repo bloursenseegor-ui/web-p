@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+
+                <h2 class="text-center mb-4">Новая заявка</h2>{# [ЗАМЕНИТЬ] заголовок страницы #}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {# [ЗАМЕНИТЬ] Поля формы под тему. name="..." должен совпадать с views.py apply() #}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Название курса</label>{# [ЗАМЕНИТЬ] подпись поля #}
+                        <select name="course" class="form-select" required>{# [ЗАМЕНИТЬ] name="course" #}
+                            <option value="" disabled selected>— Выберите курс —</option>{# [ЗАМЕНИТЬ] текст #}
+                            {# [ЗАМЕНИТЬ] варианты выбора — value должен совпадать с PAYMENT_CHOICES в models.py #}
+                            <option value="Основы алгоритмизации и программирования">
+                                Основы алгоритмизации и программирования
+                            </option>
+                            <option value="Основы веб-дизайна">
+                                Основы веб-дизайна
+                            </option>
+                            <option value="Основы проектирования баз данных">
+                                Основы проектирования баз данных
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Желаемая дата начала обучения{# [ЗАМЕНИТЬ] подпись поля #}
+                        </label>
+                        <input type="date" name="start_date"{# [ЗАМЕНИТЬ] name #}
+                               class="form-control" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Способ оплаты</label>{# [ЗАМЕНИТЬ] подпись #}
+                        {# [ЗАМЕНИТЬ] варианты radio — value должен совпадать с PAYMENT_CHOICES в models.py #}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                                   name="payment" value="cash" id="cash" required>{# [ЗАМЕНИТЬ] name, value #}
+                            <label class="form-check-label" for="cash">
+                                Наличными{# [ЗАМЕНИТЬ] текст #}
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                                   name="payment" value="transfer" id="transfer">{# [ЗАМЕНИТЬ] value #}
+                            <label class="form-check-label" for="transfer">
+                                Переводом по номеру телефона{# [ЗАМЕНИТЬ] текст #}
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Отправить{# [ЗАМЕНИТЬ] текст кнопки из задания #}
+                    </button>
+                </form>
+
+                <p class="text-center mt-3 mb-0">
+                    <a href="{% url 'applications' %}">← Мои заявки</a>{# [ЗАМЕНИТЬ] текст ссылки #}
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

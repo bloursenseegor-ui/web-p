@@ -1,0 +1,78 @@
+/* Основные стили портала, дополняющие Bootstrap 5 */
+
+/* Минимальная высота страницы и шрифт по умолчанию */
+body {
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Карточки со скруглёнными углами и плавной анимацией при наведении */
+.card {
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Лёгкое поднятие карточки при наведении курсора */
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Скруглённые кнопки и поля ввода */
+.btn {
+    border-radius: 8px;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+}
+
+/* Слайдер с обрезкой содержимого по скруглённым краям */
+.carousel {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Фиксированная высота изображений слайдера с обрезкой без искажений */
+.slider-img {
+    height: 280px;
+    object-fit: cover;
+}
+
+/* Скруглённые углы таблицы администратора */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Адаптивные стили для мобильных устройств (ширина до 576px) */
+@media (max-width: 576px) {
+
+    /* Уменьшенные боковые отступы контейнера */
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* Меньшая высота слайдера на экранах телефона */
+    .slider-img {
+        height: 160px !important;
+    }
+
+    /* Уменьшенный размер заголовков */
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Мелкий шрифт таблицы чтобы она помещалась на экран */
+    .table {
+        font-size: 0.8rem;
+    }
+
+    /* Компактные кнопки в навигационной панели */
+    .navbar .btn {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+    }
+}
