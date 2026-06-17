@@ -76,7 +76,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             # Администратора направляем в панель управления
-            if username == 'Admin':
+            if username == 'ЛОГИН_АДМИНА':
                 return redirect('admin_panel')
             return redirect('applications')
         else:
@@ -101,7 +101,7 @@ def applications(request):
         # Проверяем, что заявка принадлежит текущему пользователю
         app = get_object_or_404(Application, id=app_id, user=request.user)
 
-        # Отзыв можно оставить только если обучение завершено
+        # Отзыв можно оставить только если статус «завершено»
         if app.status == 'done' and review_text:
             # get_or_create — создаёт отзыв, если его ещё нет
             Review.objects.get_or_create(
@@ -116,19 +116,19 @@ def applications(request):
 
 @login_required
 def apply(request):
-    """Создание новой заявки на курс."""
+    """Создание новой заявки."""
     if request.method == 'POST':
         # Имена полей должны совпадать с атрибутом name в HTML-форме
-        course_name = request.POST.get('course', '').strip()
-        start_date = request.POST.get('start_date', '').strip()
-        payment = request.POST.get('payment', '').strip()
+        ПОЛЕ_1 = request.POST.get('ПОЛЕ_1', '').strip()
+        ПОЛЕ_2 = request.POST.get('ПОЛЕ_2', '').strip()
+        ПОЛЕ_3 = request.POST.get('ПОЛЕ_3', '').strip()
 
         # Сохраняем заявку в базу данных
         Application.objects.create(
             user=request.user,
-            course_name=course_name,
-            start_date=start_date,
-            payment=payment,
+            ПОЛЕ_1=ПОЛЕ_1,
+            ПОЛЕ_2=ПОЛЕ_2,
+            ПОЛЕ_3=ПОЛЕ_3,
         )
         return redirect('applications')
 
@@ -136,8 +136,8 @@ def apply(request):
 
 
 def admin_panel(request):
-    """Панель администратора — доступна только пользователю Admin."""
-    if not request.user.is_authenticated or request.user.username != 'Admin':
+    """Панель администратора — доступна только пользователю ЛОГИН_АДМИНА."""
+    if not request.user.is_authenticated or request.user.username != 'ЛОГИН_АДМИНА':
         return redirect('login')
 
     # Получаем все заявки всех пользователей
@@ -147,7 +147,7 @@ def admin_panel(request):
 
 def change_status(request, pk):
     """Изменение статуса заявки администратором. pk — идентификатор заявки."""
-    if not request.user.is_authenticated or request.user.username != 'Admin':
+    if not request.user.is_authenticated or request.user.username != 'ЛОГИН_АДМИНА':
         return redirect('login')
 
     if request.method == 'POST':

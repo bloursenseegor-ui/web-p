@@ -3,19 +3,19 @@ from django.contrib.auth.models import User
 
 
 class Application(models.Model):
-    """Заявка на обучение, связанная с пользователем."""
+    """Заявка пользователя, связанная с его аккаунтом."""
 
-    # Варианты способа оплаты
-    PAYMENT_CHOICES = [
-        ('cash', 'Наличными'),
-        ('transfer', 'Переводом по номеру телефона'),
+    # Варианты для выпадающего списка или radio-кнопок (ПОЛЕ_3)
+    ПОЛЕ_3_CHOICES = [
+        ('ВАРИАНТ_1_КОД', 'ВАРИАНТ_1_ТЕКСТ'),
+        ('ВАРИАНТ_2_КОД', 'ВАРИАНТ_2_ТЕКСТ'),
     ]
 
     # Варианты статуса заявки
     STATUS_CHOICES = [
-        ('new', 'Новая'),
-        ('learning', 'Идет обучение'),
-        ('done', 'Обучение завершено'),
+        ('new', 'СТАТУС_1'),
+        ('active', 'СТАТУС_2'),
+        ('done', 'СТАТУС_3'),
     ]
 
     # Связь с пользователем: при удалении пользователя удаляются все его заявки
@@ -25,25 +25,25 @@ class Application(models.Model):
         verbose_name='Пользователь'
     )
 
-    # Название курса — строка до 255 символов
-    course_name = models.CharField(
+    # Текстовое поле — строка до 255 символов
+    ПОЛЕ_1 = models.CharField(
         max_length=255,
-        verbose_name='Название курса'
+        verbose_name='НАЗВАНИЕ_ПОЛЯ_1'
     )
 
-    # Желаемая дата начала обучения
-    start_date = models.DateField(
-        verbose_name='Дата начала'
+    # Поле с датой
+    ПОЛЕ_2 = models.DateField(
+        verbose_name='НАЗВАНИЕ_ПОЛЯ_2'
     )
 
-    # Способ оплаты — выбор из PAYMENT_CHOICES
-    payment = models.CharField(
+    # Поле с выбором из списка
+    ПОЛЕ_3 = models.CharField(
         max_length=20,
-        choices=PAYMENT_CHOICES,
-        verbose_name='Способ оплаты'
+        choices=ПОЛЕ_3_CHOICES,
+        verbose_name='НАЗВАНИЕ_ПОЛЯ_3'
     )
 
-    # Статус заявки — по умолчанию «Новая»
+    # Статус заявки — по умолчанию первый статус
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -63,11 +63,11 @@ class Application(models.Model):
         ordering = ['-created_at']  # новые заявки отображаются первыми
 
     def __str__(self):
-        return f'{self.user.username} — {self.course_name}'
+        return f'{self.user.username} — {self.ПОЛЕ_1}'
 
 
 class Review(models.Model):
-    """Отзыв об обучении, привязанный к конкретной заявке (один к одному)."""
+    """Отзыв, привязанный к конкретной заявке (один к одному)."""
 
     # Связь с заявкой: один отзыв на одну заявку
     application = models.OneToOneField(

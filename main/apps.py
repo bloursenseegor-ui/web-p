@@ -4,8 +4,8 @@ from django.apps import AppConfig
 def create_admin(sender, **kwargs):
     """Создаёт администратора автоматически после применения миграций."""
     from django.contrib.auth.models import User
-    if not User.objects.filter(username='Admin').exists():
-        User.objects.create_user(username='Admin', password='KorokNET')
+    if not User.objects.filter(username='ЛОГИН_АДМИНА').exists():
+        User.objects.create_user(username='ЛОГИН_АДМИНА', password='ПАРОЛЬ_АДМИНА')
 
 
 class MainConfig(AppConfig):
