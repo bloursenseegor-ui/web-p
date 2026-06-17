@@ -59,6 +59,65 @@ Application.objects.create(ПОЛЕ_1=ПОЛЕ_1, ...)
 - Поля в строках `{{ app.ПОЛЕ_1 }}`
 - Варианты статусов в `<select>`
 
+## Примеры замены под тему
+
+**Как понять что такое ПОЛЕ_1, ПОЛЕ_2, ПОЛЕ_3:**
+В задании написано что пользователь должен заполнить — это и есть твои поля.
+Берёшь слово из задания и пишешь его по-английски.
+
+---
+
+**Тема: Запись к врачу**
+> "Пользователь выбирает врача, указывает дату приёма и способ оплаты"
+- ПОЛЕ_1 → `doctor` (врач — текст)
+- ПОЛЕ_2 → `visit_date` (дата приёма — дата)
+- ПОЛЕ_3 → `payment` (способ оплаты — выбор)
+
+```python
+# models.py
+ПОЛЕ_3_CHOICES = [('cash', 'Наличными'), ('policy', 'По полису')]
+STATUS_CHOICES = [('new', 'Новая'), ('active', 'На приёме'), ('done', 'Завершена')]
+doctor = models.CharField(max_length=255, verbose_name='Врач')
+visit_date = models.DateField(verbose_name='Дата приёма')
+payment = models.CharField(max_length=20, choices=ПОЛЕ_3_CHOICES, verbose_name='Оплата')
+```
+
+---
+
+**Тема: Аренда автомобиля**
+> "Пользователь выбирает автомобиль, указывает дату аренды и способ оплаты"
+- ПОЛЕ_1 → `car_name` (автомобиль — текст)
+- ПОЛЕ_2 → `rent_date` (дата аренды — дата)
+- ПОЛЕ_3 → `payment` (способ оплаты — выбор)
+
+```python
+# models.py
+ПОЛЕ_3_CHOICES = [('cash', 'Наличными'), ('card', 'Картой')]
+STATUS_CHOICES = [('new', 'Новая'), ('active', 'В аренде'), ('done', 'Возвращён')]
+car_name = models.CharField(max_length=255, verbose_name='Автомобиль')
+rent_date = models.DateField(verbose_name='Дата аренды')
+payment = models.CharField(max_length=20, choices=ПОЛЕ_3_CHOICES, verbose_name='Оплата')
+```
+
+---
+
+**Тема: Запись в спортзал**
+> "Пользователь выбирает тренера, указывает дату начала и тип абонемента"
+- ПОЛЕ_1 → `trainer` (тренер — текст)
+- ПОЛЕ_2 → `start_date` (дата начала — дата)
+- ПОЛЕ_3 → `subscription` (тип абонемента — выбор)
+
+```python
+# models.py
+ПОЛЕ_3_CHOICES = [('month', 'На месяц'), ('year', 'На год')]
+STATUS_CHOICES = [('new', 'Новая'), ('active', 'Активна'), ('done', 'Истекла')]
+trainer = models.CharField(max_length=255, verbose_name='Тренер')
+start_date = models.DateField(verbose_name='Дата начала')
+subscription = models.CharField(max_length=20, choices=ПОЛЕ_3_CHOICES, verbose_name='Абонемент')
+```
+
+---
+
 ## После изменения models.py — обязательно!
 ```powershell
 python manage.py makemigrations
